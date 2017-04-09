@@ -10,15 +10,17 @@ public class UserDto {
     private String secondName;
     private String login;
     private String email;
+    private boolean activated;
 
     public UserDto() {
     }
 
-    public UserDto(String name, String secondName, String login, String email) {
+    public UserDto(String name, String secondName, String login, String email, boolean activated) {
         this.name = name;
         this.secondName = secondName;
         this.login = login;
         this.email = email;
+        this.activated = activated;
     }
 
     public String getName() {
@@ -53,7 +55,15 @@ public class UserDto {
         this.email = email;
     }
 
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
+    }
+
     public static UserDto convertToDTO(Account account){
-        return new UserDto(account.getName(), account.getSecondName(), account.getLogin(), account.getEmail());
+        return new UserDto(account.getName(), account.getSecondName(), account.getLogin(), account.getEmail(), account.isEnable());
     }
 }

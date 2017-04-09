@@ -30,8 +30,9 @@ public class AccountDaoImpl implements AccountDao {
 
 
     @Transactional
-    public void delete(Account account) {
-        entityManager.remove(account);
+    public void delete(String login) {
+        entityManager.remove( entityManager.createQuery("select c FROM Account c where c.login = :login or c.email = :email")
+                .setParameter("login", login).setParameter("email", login).getSingleResult());
     }
 
     @Transactional

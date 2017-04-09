@@ -11,7 +11,7 @@ public class Role {
     @Id
     @GeneratedValue
     private int id;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @OneToMany(mappedBy = "role")

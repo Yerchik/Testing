@@ -266,7 +266,17 @@
                             </label>
                                 <p></p>
                                 <br>
+                                <div id="isUserActivated" hidden>
+                                <p></p><label for="subjectselekt" class="input-group-addon">
+                                    <p class='md-title mt0 mb0' id="isUserActivatedText"></p></label><p></p><br>
+                                <div class="pull-right" >
 
+                                            <button id="deleteUserSubmit" type="submit" class="btn btn-success"
+                                            onclick="deleteUser()">Delete
+                                        User<i
+                                                class="fa fa-angle-right ml5"></i></button>
+                                </div>
+                                </div>
                             </div>
                         </div>
 

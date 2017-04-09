@@ -34,14 +34,22 @@ public class ResultDaoImpl implements ResultDao {
     }
 
     @Transactional
+    public void deleteListResult(List<Result> resultList) {
+        for (Result result : resultList) {
+            entityManager.remove(result);
+        }
+    }
+
+
+    @Transactional
     public Result findById(int id) {
         return entityManager.find(Result.class, id);
     }
 
     @Transactional
-    public List<Result> findByAccount(int id) {
-        return entityManager.createQuery("select r from Result r where r.account.id = :id")
-                .setParameter("id", id).getResultList();
+    public List<Result> findByAccount(String login) {
+        return entityManager.createQuery("select r from Result r where r.account.login = :login")
+                .setParameter("login", login).getResultList();
     }
 
     @Transactional

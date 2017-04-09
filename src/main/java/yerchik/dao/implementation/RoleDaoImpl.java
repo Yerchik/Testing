@@ -17,6 +17,11 @@ public class RoleDaoImpl implements RoleDao {
     private EntityManager entityManager;
 
     @Transactional
+    public void addRole(Role role) {
+        entityManager.persist(role);
+    }
+
+    @Transactional
     public Role findRoleByName(String name) {
         return (Role) entityManager.createQuery("SELECT r FROM Role r WHERE r.name = :name").setParameter("name", name).getSingleResult();
     }

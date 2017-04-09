@@ -38,6 +38,13 @@ public class UserController {
         return UserDto.convertToDTO(accountService.findByLogin(principal.getName()));
     }
 
+    @RequestMapping(value = "/user/info/{login}", method = RequestMethod.GET)
+    @ResponseBody
+    public UserDto getUserInfoByLogin(@PathVariable String login){
+        return UserDto.convertToDTO(accountService.findByLogin(login));
+    }
+
+
     @RequestMapping(value = "/myResult", method = RequestMethod.GET)
     @ResponseBody
     public List<ShowResultDTO> getMyResult(Principal principal){
@@ -56,6 +63,12 @@ public class UserController {
     @ResponseBody
     public List<ShowResultDTO> getUserResult(@PathVariable String login){
         return ShowResultDTO.convertListToDTO(resultService.findByAccount(login));
+    }
+
+    @RequestMapping(value = "/deleteUser/{login}", method = RequestMethod.POST)
+    @ResponseBody
+    public void deleteUser(@PathVariable String login){
+        accountService.delete(login);
     }
 
 

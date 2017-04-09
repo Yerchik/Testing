@@ -1,6 +1,7 @@
 /**
  * Created by Yerchik on 06.04.2017.
  */
+var isActivated = false;
 $(document).ready(function () {
 
     $.ajax({
@@ -58,8 +59,6 @@ $(document).ready(function () {
     });
 
 
-
-
 })
 function example() {
     $("#passBody").slideToggle(300);
@@ -79,8 +78,6 @@ function showMyResult() {
     $("#showMyResult").slideToggle(300);
 
 }
-
-
 
 
 //  pass Test
@@ -161,7 +158,6 @@ $("#testPass").on('change', function () {
     })
 
 })
-
 
 
 //  add Test
@@ -264,9 +260,6 @@ function cleanErrorMessages() {
 }
 
 
-
-
-
 //    My result
 
 var show3 = false;
@@ -326,7 +319,6 @@ function clearMyTable() {
     $("#tableMyResult").empty();
 
 }
-
 
 
 function makeTable(a1, a2, a3, a4) {
@@ -617,7 +609,6 @@ function cleanFiltrError() {
 // Edit or delete test
 
 
-
 $("#editSubjectSelekt").on('change', function () {
     $("#errorEditSubjectMessage").hide(300);
     var s = document.querySelector("#editTestSelekt").options;
@@ -655,16 +646,17 @@ function addQuestion() {
     if (document.getElementById('editTestSelekt').value == '' || document.getElementById('editSubjectSelekt').value == '') {
         $("#errorEditAddQuestMessage").show(300);
     }
-    else {window.location.assign("/addQuestion/" + document.getElementById('editSubjectSelekt').value + ","
-        + document.getElementById('editTestSelekt').value + "");}
+    else {
+        window.location.assign("/addQuestion/" + document.getElementById('editSubjectSelekt').value + ","
+            + document.getElementById('editTestSelekt').value + "");
+    }
 }
 
 
-
 function deleteSubject() {
-    if(document.getElementById('editSubjectSelekt').value == ''){
+    if (document.getElementById('editSubjectSelekt').value == '') {
         $("#errorEditSubjectMessage").show(300);
-    }else {
+    } else {
         $.ajax({
             url: '/delete/' + document.getElementById('editSubjectSelekt').value,
             method: 'POST',
@@ -690,7 +682,7 @@ function deleteSubject() {
 }
 
 function deleteTopic() {
-    if(document.getElementById('editTestSelekt').value == '' || document.getElementById('editSubjectSelekt').value == '') {
+    if (document.getElementById('editTestSelekt').value == '' || document.getElementById('editSubjectSelekt').value == '') {
         $("#errorEditTestMessage").show(300);
     }
     else {
@@ -710,367 +702,403 @@ function deleteTopic() {
 }
 
 
-
 // UsresResult
 
 
-
 $("#selektUser").on('change', function () {
-    if (document.getElementById('selektUser').value == ''){$("#usershowMyResult").hide(300);}
-    else{
+    if (document.getElementById('selektUser').value == '') {
+        $("#usershowMyResult").hide(300);
+    }
+    else {
         $("#usershowMyResult").hide(300);
         userclearMyTable();
         $("#usershowMyResult").show(300);
+        $.ajax({
+            url: '/user/info/' + document.getElementById('selektUser').value,
+            method: 'GET',
+            contentType: 'application/json',
+            success: function (response) {
+                if (response.activated) {
+                    $("#isUserActivatedText").text("Account activated");
+                }
+                else {
+                    $("#isUserActivatedText").text("Account isn't activated");
+                }
+                $("#isUserActivated").show(300);
+            }
+        })
+
     }
 
 })
 
 
-
-    var usershow3 = false;
-    function usershowUserResult() {
+var usershow3 = false;
+function usershowUserResult() {
+    $("#usermyResult").show(300);
+    usershow1 = false;
+    usershow2 = false;
+    $("#usersubjectFilterSelektor").hide(300);
+    $("#usertopicFilterSelektor").hide(300);
+    usershow4 = false;
+    $("#userdateFilterSelektor").hide(300);
+    document.getElementById('userdateFilter').value = '';
+    document.getElementById('usersubjectFilter').value = '';
+    document.getElementById('usertopicFilter').value = '';
+    userclearMyTable();
+    if (usershow3) {
+        usershow3 = false;
+        $("#usermyResult").hide();
+    } else {
+        usershow3 = true;
         $("#usermyResult").show(300);
-        usershow1 = false;
-        usershow2 = false;
-        $("#usersubjectFilterSelektor").hide(300);
-        $("#usertopicFilterSelektor").hide(300);
-        usershow4 = false;
-        $("#userdateFilterSelektor").hide(300);
-        document.getElementById('userdateFilter').value = '';
-        document.getElementById('usersubjectFilter').value = '';
-        document.getElementById('usertopicFilter').value = '';
-        userclearMyTable();
-        if (usershow3) {
-            usershow3 = false;
-            $("#usermyResult").hide();
-        } else {
-            usershow3 = true;
-            $("#usermyResult").show(300);
-            usergetAllMyResult();
+        usergetAllMyResult();
+    }
+}
+
+var usertableHeadHTML = "<tr>" +
+    "<th>Subject </th>" +
+    "<th>Topic </th>" +
+    "<th>Result(%) </th>" +
+    "<th>date </th>" +
+    "</tr>";
+var usersubjectResult = [];
+var usertopicResult = [];
+var userresultTest = [];
+var userdateResult = [];
+
+function usergetAllMyResult() {
+    userclearMyTable();
+    $.ajax({
+        url: '/userResult/' + document.getElementById('selektUser').value,
+        method: 'GET',
+        contentType: 'application/json',
+        success: function (response) {
+            $("#usertableMyResult").append(usertableHeadHTML);
+            for (var i = 0; i < response.length; i++) {
+                usersubjectResult[i] = response[i].subject;
+                usertopicResult[i] = response[i].topic;
+                userresultTest[i] = response[i].resultTest;
+                userdateResult[i] = response[i].date;
+                usermakeTable(usersubjectResult[i], usertopicResult[i], userresultTest[i], userdateResult[i]);
+            }
+
         }
-    }
+    })
+}
+function userclearMyTable() {
+    $("#usertableMyResult").empty();
 
-    var usertableHeadHTML = "<tr>" +
-        "<th>Subject </th>" +
-        "<th>Topic </th>" +
-        "<th>Result(%) </th>" +
-        "<th>date </th>" +
+}
+
+
+function usermakeTable(a1, a2, a3, a4) {
+    var html = "<tr>" +
+        "<td>" + a1 + "</td>" +
+        "<td>" + a2 + "</td>" +
+        "<td>" + a3 + "</td>" +
+        "<td>" + a4 + "</td>" +
         "</tr>";
-    var usersubjectResult = [];
-    var usertopicResult = [];
-    var userresultTest = [];
-    var userdateResult = [];
+    $("#usertableMyResult").append(html);
 
-    function usergetAllMyResult() {
-        userclearMyTable();
-        $.ajax({
-            url: '/userResult/' + document.getElementById('selektUser').value,
-            method: 'GET',
-            contentType: 'application/json',
-            success: function (response) {
-                $("#usertableMyResult").append(usertableHeadHTML);
-                for (var i = 0; i < response.length; i++) {
-                    usersubjectResult[i] = response[i].subject;
-                    usertopicResult[i] = response[i].topic;
-                    userresultTest[i] = response[i].resultTest;
-                    userdateResult[i] = response[i].date;
-                    usermakeTable(usersubjectResult[i], usertopicResult[i], userresultTest[i], userdateResult[i]);
-                }
+}
 
-            }
-        })
-    }
-    function userclearMyTable() {
-        $("#usertableMyResult").empty();
-
-    }
-
-
-    function usermakeTable(a1, a2, a3, a4) {
-        var html = "<tr>" +
-            "<td>" + a1 + "</td>" +
-            "<td>" + a2 + "</td>" +
-            "<td>" + a3 + "</td>" +
-            "<td>" + a4 + "</td>" +
-            "</tr>";
-        $("#usertableMyResult").append(html);
-
-    }
-
-    function usergetSubjectFiltr() {
-        $.ajax({
-            url: '/getSubjects',
-            method: 'GET',
-            contentType: 'application/json',
-            success: function (response) {
-                var s2 = document.querySelector("#usersubjectFilter").options;
-                for (var i = 0; i < s2.length; i++) {
-                    s2[i] = null;
-                }
-                s2[0] = null;
-                for (var j = 0; j < response.length; j++) {
-                    s2[j + 1] = new Option(response[j].subjectName, response[j].subjectName, true);
-                }
-                $("#usersubjectFilterSelektor").show(300);
-            }
-        })
-
-    }
-    var usershow1 = false;
-    function usershowsubjectSelect() {
-        userclearMyTable();
-        if (usershow1) {
-            usershow4 = false;
-            document.getElementById('userdateFilter').value = ''
-            $("#dateFilterSelektor").hide(300);
-            usershow1 = false;
-            usershow2 = false;
+function usergetSubjectFiltr() {
+    $.ajax({
+        url: '/getSubjects',
+        method: 'GET',
+        contentType: 'application/json',
+        success: function (response) {
             var s2 = document.querySelector("#usersubjectFilter").options;
             for (var i = 0; i < s2.length; i++) {
                 s2[i] = null;
             }
-            document.getElementById('usersubjectFilter').value = '';
-            $("#usersubjectFilterSelektor").hide(300);
-            $("#usertopicFilterSelektor").hide(300);
+            s2[0] = null;
+            for (var j = 0; j < response.length; j++) {
+                s2[j + 1] = new Option(response[j].subjectName, response[j].subjectName, true);
+            }
+            $("#usersubjectFilterSelektor").show(300);
         }
-        else {
-            usershow4 = false;
-            $("#userdateFilterSelektor").hide(300);
-            document.getElementById('userdateFilter').value = '';
-            usercleanFiltrError();
-            usershow1 = true;
-            usergetSubjectFiltr();
-        }
-    }
+    })
 
-    $("#usersubjectFilter").on('change', function () {
+}
+var usershow1 = false;
+function usershowsubjectSelect() {
+    userclearMyTable();
+    if (usershow1) {
+        usershow4 = false;
+        document.getElementById('userdateFilter').value = ''
+        $("#dateFilterSelektor").hide(300);
+        usershow1 = false;
+        usershow2 = false;
+        var s2 = document.querySelector("#usersubjectFilter").options;
+        for (var i = 0; i < s2.length; i++) {
+            s2[i] = null;
+        }
+        document.getElementById('usersubjectFilter').value = '';
+        $("#usersubjectFilterSelektor").hide(300);
+        $("#usertopicFilterSelektor").hide(300);
+    }
+    else {
         usershow4 = false;
         $("#userdateFilterSelektor").hide(300);
         document.getElementById('userdateFilter').value = '';
-        userclearMyTable();
-        var s = document.querySelector("#usertopicFilter").options;
-        for (var i = 0; i <= s.length; i++) {
-            s[i] = null;
-        }
-        $("#usertableMyResult").append(tableHeadHTML);
-        $.ajax({
-            url: '/userResult/' + document.getElementById('selektUser').value,
-            method: 'GET',
-            contentType: 'application/json',
-            success: function (response) {
-                for (var i = 0; i < response.length; i++) {
-                    usersubjectResult[i] = response[i].subject;
-                    usertopicResult[i] = response[i].topic;
-                    userresultTest[i] = response[i].resultTest;
-                    userdateResult[i] = response[i].date;
-                    if (usersubjectResult[i] == document.getElementById('usersubjectFilter').value) {
-                        usermakeTable(usersubjectResult[i], usertopicResult[i], userresultTest[i], userdateResult[i]);
-                    }
-                }
-
-                $.ajax({
-                    url: '/getTapeBy/' + document.getElementById('usersubjectFilter').value,
-                    method: 'GET',
-                    contentType: 'application/json',
-                    success: function (response) {
-                        for (var i = 0; i <= s.length; i++) {
-                            s[i] = null;
-                        }
-                        s[0] = null;
-                        for (var j = 0; j < response.length; j++) {
-                            s[j + 1] = new Option(response[j].topic, response[j].topic, true);
-                        }
-                    }
-                })
-
-                $("#usermyResult").show(300);
-                clearDataFilter();
-
-            }
-        })
-
-    })
-
-
-    var usershow2 = false;
-    function usershowTopicSelect() {
-        if (usershow2) {
-            usershow4 = false;
-            document.getElementById('userdateFilter').value = ''
-            $("#userdateFilterSelektor").hide(300);
-            $("#usertopicFilterSelektor").hide(300);
-            usershow2 = false;
-            var s2 = document.querySelector("#usertopicFilter").options;
-            for (var i = 0; i < s2.length; i++) {
-                s2[i] = null;
-            }
-            document.getElementById('usertopicFilter').value = '';
-
-        }
-        else {
-            usershow4 = false;
-            $("#userdateFilterSelektor").hide(300);
-            document.getElementById('userdateFilter').value = '';
-            if (document.getElementById('usersubjectFilter').value != '') {
-                usergetTopicFiltr();
-                usershow2 = true;
-                $("#usertopicFilterSelektor").show(300);
-            } else {
-                usercleanFiltrError();
-                usershowFiltrError();
-            }
-
-        }
-    }
-
-    function usergetTopicFiltr() {
         usercleanFiltrError();
-        var s = document.querySelector("#usertopicFilter").options;
-        for (var i = 0; i <= s.length; i++) {
-            s[i] = null;
-        }
-        $.ajax({
-            url: '/getTapeBy/' + document.getElementById('usersubjectFilter').value,
-            method: 'GET',
-            contentType: 'application/json',
-            success: function (response) {
-                for (var i = 0; i <= s.length; i++) {
-                    s[i] = null;
-                }
-                s[0] = null;
-                for (var j = 0; j < response.length; j++) {
-                    s[j + 1] = new Option(response[j].topic, response[j].topic, true);
-                }
-                $("#usertopicFilterSelektor").show(300);
-
-            }
-        })
+        usershow1 = true;
+        usergetSubjectFiltr();
     }
+}
 
-    $("#usertopicFilter").on('change', function () {
+$("#usersubjectFilter").on('change', function () {
+    usershow4 = false;
+    $("#userdateFilterSelektor").hide(300);
+    document.getElementById('userdateFilter').value = '';
+    userclearMyTable();
+    var s = document.querySelector("#usertopicFilter").options;
+    for (var i = 0; i <= s.length; i++) {
+        s[i] = null;
+    }
+    $("#usertableMyResult").append(tableHeadHTML);
+    $.ajax({
+        url: '/userResult/' + document.getElementById('selektUser').value,
+        method: 'GET',
+        contentType: 'application/json',
+        success: function (response) {
+            for (var i = 0; i < response.length; i++) {
+                usersubjectResult[i] = response[i].subject;
+                usertopicResult[i] = response[i].topic;
+                userresultTest[i] = response[i].resultTest;
+                userdateResult[i] = response[i].date;
+                if (usersubjectResult[i] == document.getElementById('usersubjectFilter').value) {
+                    usermakeTable(usersubjectResult[i], usertopicResult[i], userresultTest[i], userdateResult[i]);
+                }
+            }
+
+            $.ajax({
+                url: '/getTapeBy/' + document.getElementById('usersubjectFilter').value,
+                method: 'GET',
+                contentType: 'application/json',
+                success: function (response) {
+                    for (var i = 0; i <= s.length; i++) {
+                        s[i] = null;
+                    }
+                    s[0] = null;
+                    for (var j = 0; j < response.length; j++) {
+                        s[j + 1] = new Option(response[j].topic, response[j].topic, true);
+                    }
+                }
+            })
+
+            $("#usermyResult").show(300);
+            clearDataFilter();
+
+        }
+    })
+
+})
+
+
+var usershow2 = false;
+function usershowTopicSelect() {
+    if (usershow2) {
+        usershow4 = false;
+        document.getElementById('userdateFilter').value = ''
+        $("#userdateFilterSelektor").hide(300);
+        $("#usertopicFilterSelektor").hide(300);
+        usershow2 = false;
+        var s2 = document.querySelector("#usertopicFilter").options;
+        for (var i = 0; i < s2.length; i++) {
+            s2[i] = null;
+        }
+        document.getElementById('usertopicFilter').value = '';
+
+    }
+    else {
         usershow4 = false;
         $("#userdateFilterSelektor").hide(300);
         document.getElementById('userdateFilter').value = '';
-        userclearMyTable();
-        $("#usertableMyResult").append(tableHeadHTML);
-        $.ajax({
-            url: '/userResult/' + document.getElementById('selektUser').value,
-            method: 'GET',
-            contentType: 'application/json',
-            success: function (response) {
-                for (var i = 0; i < response.length; i++) {
-                    usersubjectResult[i] = response[i].subject;
-                    usertopicResult[i] = response[i].topic;
-                    userresultTest[i] = response[i].resultTest;
-                    userdateResult[i] = response[i].date;
-                    if (usersubjectResult[i] == document.getElementById('usersubjectFilter').value &&
-                        usertopicResult[i] == document.getElementById('usertopicFilter').value) {
-                        usermakeTable(usersubjectResult[i], usertopicResult[i], userresultTest[i], userdateResult[i]);
-                    }
-                }
+        if (document.getElementById('usersubjectFilter').value != '') {
+            usergetTopicFiltr();
+            usershow2 = true;
+            $("#usertopicFilterSelektor").show(300);
+        } else {
+            usercleanFiltrError();
+            usershowFiltrError();
+        }
 
-                $("#usermyResult").show(300);
-                clearDataFilter();
+    }
+}
 
+function usergetTopicFiltr() {
+    usercleanFiltrError();
+    var s = document.querySelector("#usertopicFilter").options;
+    for (var i = 0; i <= s.length; i++) {
+        s[i] = null;
+    }
+    $.ajax({
+        url: '/getTapeBy/' + document.getElementById('usersubjectFilter').value,
+        method: 'GET',
+        contentType: 'application/json',
+        success: function (response) {
+            for (var i = 0; i <= s.length; i++) {
+                s[i] = null;
             }
-        })
+            s[0] = null;
+            for (var j = 0; j < response.length; j++) {
+                s[j + 1] = new Option(response[j].topic, response[j].topic, true);
+            }
+            $("#usertopicFilterSelektor").show(300);
 
+        }
+    })
+}
+
+$("#usertopicFilter").on('change', function () {
+    usershow4 = false;
+    $("#userdateFilterSelektor").hide(300);
+    document.getElementById('userdateFilter').value = '';
+    userclearMyTable();
+    $("#usertableMyResult").append(tableHeadHTML);
+    $.ajax({
+        url: '/userResult/' + document.getElementById('selektUser').value,
+        method: 'GET',
+        contentType: 'application/json',
+        success: function (response) {
+            for (var i = 0; i < response.length; i++) {
+                usersubjectResult[i] = response[i].subject;
+                usertopicResult[i] = response[i].topic;
+                userresultTest[i] = response[i].resultTest;
+                userdateResult[i] = response[i].date;
+                if (usersubjectResult[i] == document.getElementById('usersubjectFilter').value &&
+                    usertopicResult[i] == document.getElementById('usertopicFilter').value) {
+                    usermakeTable(usersubjectResult[i], usertopicResult[i], userresultTest[i], userdateResult[i]);
+                }
+            }
+
+            $("#usermyResult").show(300);
+            clearDataFilter();
+
+        }
     })
 
-    var usershow4 = false;
-    function usershowDateSelect() {
-        userclearMyTable();
-        clearDataFilter();
+})
 
-        if (usershow4) {
-            usershow4 = false;
-            document.getElementById('userdateFilter').value = ''
-            $("#userdateFilterSelektor").hide(300);
-        }
-        else {
-            usercleanFiltrError();
-            usershow4 = true;
-            usergetDateFiltr();
-            $("#userdateFilterSelektor").show(300);
-        }
+var usershow4 = false;
+function usershowDateSelect() {
+    userclearMyTable();
+    clearDataFilter();
 
-
+    if (usershow4) {
+        usershow4 = false;
+        document.getElementById('userdateFilter').value = ''
+        $("#userdateFilterSelektor").hide(300);
+    }
+    else {
+        usercleanFiltrError();
+        usershow4 = true;
+        usergetDateFiltr();
+        $("#userdateFilterSelektor").show(300);
     }
 
-    function clearDataFilter() {
-        var s = document.querySelector("#userdateFilter").options;
-        for (var i = 0; i < s.length; i++) {
-            s[i] = null;
-        }
-        s[0] = null;
-    }
 
-    function usergetDateFiltr() {
-        var s = document.querySelector("#userdateFilter").options;
-        for (var i = 0; i < s.length; i++) {
-            s[i] = null;
-        }
-        $.ajax({
-            url: '/userResult/' + document.getElementById('selektUser').value,
-            method: 'GET',
-            contentType: 'application/json',
-            success: function (response) {
-                $("#usertableMyResult").append(usertableHeadHTML);
-                for (var i = 0; i < s.length; i++) {
-                    s[i] = null;
-                }
-                var j = 1;
-                for (var i = 0; i < response.length; i++) {
-                    if (i == 0) {
+}
+
+function clearDataFilter() {
+    var s = document.querySelector("#userdateFilter").options;
+    for (var i = 0; i < s.length; i++) {
+        s[i] = null;
+    }
+    s[0] = null;
+}
+
+function usergetDateFiltr() {
+    var s = document.querySelector("#userdateFilter").options;
+    for (var i = 0; i < s.length; i++) {
+        s[i] = null;
+    }
+    $.ajax({
+        url: '/userResult/' + document.getElementById('selektUser').value,
+        method: 'GET',
+        contentType: 'application/json',
+        success: function (response) {
+            $("#usertableMyResult").append(usertableHeadHTML);
+            for (var i = 0; i < s.length; i++) {
+                s[i] = null;
+            }
+            var j = 1;
+            for (var i = 0; i < response.length; i++) {
+                if (i == 0) {
+                    s[j] = new Option(response[i].date, response[i].date, true);
+                    j++;
+                } else {
+                    if (response[i].date != response[i - 1].date) {
                         s[j] = new Option(response[i].date, response[i].date, true);
                         j++;
-                    } else {
-                        if (response[i].date != response[i - 1].date) {
-                            s[j] = new Option(response[i].date, response[i].date, true);
-                            j++;
-                        }
                     }
-                    usersubjectResult[i] = response[i].subject;
-                    usertopicResult[i] = response[i].topic;
-                    userresultTest[i] = response[i].resultTest;
-                    userdateResult[i] = response[i].date;
                 }
+                usersubjectResult[i] = response[i].subject;
+                usertopicResult[i] = response[i].topic;
+                userresultTest[i] = response[i].resultTest;
+                userdateResult[i] = response[i].date;
+            }
 
-            }
-        })
-
-    }
-
-    $("#userdateFilter").on('change', function () {
-        userclearMyTable();
-        $("#tableMyResult").append(usertableHeadHTML);
-        for (var i = 0; i < userdateResult.length; i++) {
-            if (userdateResult[i] == document.getElementById('userdateFilter').value && usersubjectResult[i] == document.getElementById('usersubjectFilter').value &&
-                usertopicResult[i] == document.getElementById('usertopicFilter').value) {
-                usermakeTable(usersubjectResult[i], usertopicResult[i], userresultTest[i], userdateResult[i]);
-            }
-            if (userdateResult[i] == document.getElementById('userdateFilter').value && document.getElementById('usersubjectFilter').value == '' &&
-                document.getElementById('usertopicFilter').value == '') {
-                usermakeTable(usersubjectResult[i], usertopicResult[i], userresultTest[i], userdateResult[i]);
-            }
-            if (userdateResult[i] == document.getElementById('userdateFilter').value && usersubjectResult[i] == document.getElementById('usersubjectFilter').value &&
-                document.getElementById('usertopicFilter').value == '') {
-                usermakeTable(usersubjectResult[i], usertopicResult[i], userresultTest[i], userdateResult[i]);
-            }
         }
-        $("#usermyResult").show(300);
     })
 
-    function usershowFiltrError() {
+}
 
-        var html = "<div class='alert alert-danger'>"
-            + "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>"
-            + "<strong>Oh snap!</strong> Select a Subject</a>."
-            + "</div>"
-        $("#userfiltrError").append(html);
+$("#userdateFilter").on('change', function () {
+    userclearMyTable();
+    $("#tableMyResult").append(usertableHeadHTML);
+    for (var i = 0; i < userdateResult.length; i++) {
+        if (userdateResult[i] == document.getElementById('userdateFilter').value && usersubjectResult[i] == document.getElementById('usersubjectFilter').value &&
+            usertopicResult[i] == document.getElementById('usertopicFilter').value) {
+            usermakeTable(usersubjectResult[i], usertopicResult[i], userresultTest[i], userdateResult[i]);
+        }
+        if (userdateResult[i] == document.getElementById('userdateFilter').value && document.getElementById('usersubjectFilter').value == '' &&
+            document.getElementById('usertopicFilter').value == '') {
+            usermakeTable(usersubjectResult[i], usertopicResult[i], userresultTest[i], userdateResult[i]);
+        }
+        if (userdateResult[i] == document.getElementById('userdateFilter').value && usersubjectResult[i] == document.getElementById('usersubjectFilter').value &&
+            document.getElementById('usertopicFilter').value == '') {
+            usermakeTable(usersubjectResult[i], usertopicResult[i], userresultTest[i], userdateResult[i]);
+        }
     }
+    $("#usermyResult").show(300);
+})
 
-    function usercleanFiltrError() {
-        $("#userfiltrError").empty();
-    }
+function usershowFiltrError() {
 
+    var html = "<div class='alert alert-danger'>"
+        + "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>"
+        + "<strong>Oh snap!</strong> Select a Subject</a>."
+        + "</div>"
+    $("#userfiltrError").append(html);
+}
+
+function usercleanFiltrError() {
+    $("#userfiltrError").empty();
+}
+
+// delete user
+
+function deleteUser() {
+    $.ajax({
+        url: '/deleteUser/' + document.getElementById('selektUser').value,
+        method: 'POST',
+        contentType: 'application/json',
+        success: function () {
+            alert('User is deleted')
+            var s1 = document.querySelector("#selektUser").options;
+            for (var i = 0; i < s1.length; i++) {
+                if (s1[i].value == document.getElementById('selektUser').value) {
+                    s1[i] = null;
+                }
+            }
+            $("#usershowMyResult").hide(300);
+            $("#isUserActivated").hide(300);
+
+
+        }
+    })
+}

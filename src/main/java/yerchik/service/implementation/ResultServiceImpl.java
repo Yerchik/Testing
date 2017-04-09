@@ -57,7 +57,7 @@ public class ResultServiceImpl implements ResultService {
 
     @Override
     public List<Result> findByAccount(String login) {
-        return resultDao.findByAccount(accountDao.findByLogin(login).getId());
+        return resultDao.findByAccount(login);
     }
 
     @Override

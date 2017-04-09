@@ -10,10 +10,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import yerchik.dao.AccountDao;
+import yerchik.dao.ResultDao;
 import yerchik.dao.RoleDao;
 import yerchik.dto.SignUpDto;
 import yerchik.dto.UserDto;
 import yerchik.entity.Account;
+import yerchik.entity.Role;
 import yerchik.service.AccountService;
 
 import java.util.ArrayList;
@@ -31,14 +33,28 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     @Autowired
     private RoleDao roleDao;
 
+    @Autowired
+    private ResultDao resultDao;
+
     @Override
     public void add(SignUpDto dto) {
         Account account = dto.convertToEntity();
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         account.setPassword(encoder.encode(account.getPassword()));
-        if (dto.getLogin().equals("admin")){
+        if (dto.getLogin().equals("admin")) {
+            try {
+                Role admin = new Role("ADMIN");
+                roleDao.addRole(admin);
+
+            } catch (Exception e) {}
             account.setRole(roleDao.findRoleByName("ADMIN"));
-        } else account.setRole(roleDao.findRoleByName("USER"));
+        } else {
+            try {
+                Role user = new Role("USER");
+                roleDao.addRole(user);
+            } catch (Exception e) {}
+            account.setRole(roleDao.findRoleByName("USER"));
+        }
         accountDao.add(account);
 
     }
@@ -52,8 +68,11 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     }
 
     @Override
-    public void delete(int id) {
-        accountDao.delete(accountDao.findById(id));
+    public void delete(String login) {
+        try {
+            resultDao.deleteListResult(resultDao.findByAccount(login));
+        }catch (Exception e){}
+        accountDao.delete(login);
     }
 
     @Override
@@ -83,12 +102,12 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         Account account = accountDao.findByLogin(login);
-        if (account == null){
+        if (account == null) {
             throw new UsernameNotFoundException("Bad Credentials");
         }
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_"+account.getRole().getName().toUpperCase()));
-        return new User(account.getEmail(), account.getPassword(),account.isEnable(),true,true,true, authorities);
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + account.getRole().getName().toUpperCase()));
+        return new User(account.getEmail(), account.getPassword(), account.isEnable(), true, true, true, authorities);
     }
 
 

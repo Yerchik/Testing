@@ -14,7 +14,7 @@ public interface AccountService {
 
     void verify(String login);
 
-    void delete(int id);
+    void delete(String login);
 
     Account findById(int id);
 

@@ -12,7 +12,7 @@ public interface AccountDao {
 
     void edit(Account account);
 
-    void delete(Account account);
+    void delete(String login);
 
     Account findById(int id);
 

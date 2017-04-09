@@ -14,9 +14,11 @@ public interface ResultDao {
 
     void deleteList(TypeOfTest typeOfTest);
 
+    void deleteListResult(List<Result> resultList);
+
     Result findById(int id);
 
-    List<Result> findByAccount(int id);
+    List<Result> findByAccount(String login);
 
     List<Result> findByTopicAndLogin(TypeOfTest typeOfTest, Account account);
 
