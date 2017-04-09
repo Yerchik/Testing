@@ -26,7 +26,7 @@ $("#submit").click(function (e) {
                 +"<strong>Oh snap!</strong> Somebody has used this Email or Login."
                 +"</div>"
             $("#errorMessage").append(html);
-        }, 4000);
+        }, 4500);
     }
 
 

@@ -250,7 +250,7 @@
                     <div class='panel panel-default'>
 
                         <div class='panel-body'>
-                            <h1 class='md-title mt0 mb5'>show result of users</h1>
+                            <h1 class='md-title mt0 mb5'>show result of users and delete users</h1>
                         </div>
                         <div class='panel-footer' style="display: none;" id="ShowUsersResult">
 
