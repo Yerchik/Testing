@@ -58,9 +58,7 @@
                 </a>
                 <div class="media-body">
                     <h4 class="media-heading" id="credentials"></h4>
-                    <span class="user-options"><a href="#"><i class="glyphicon glyphicon-user"></i></a>
-                              <a href="#"><i class="glyphicon glyphicon-envelope"></i></a>
-                              <a href="#"><i class="glyphicon glyphicon-cog"></i></a>
+                    <span class="user-options">
                               <a href="/logout"><i class="glyphicon glyphicon-log-out"></i></a>
 							</span>
                 </div>
@@ -266,16 +264,17 @@
                             </label>
                                 <p></p>
                                 <br>
-                                <div id="isUserActivated" hidden>
+
+                            </div>
+                            <div class="col-sm-6" id="isUserActivated" hidden>
                                 <p></p><label for="subjectselekt" class="input-group-addon">
-                                    <p class='md-title mt0 mb0' id="isUserActivatedText"></p></label><p></p><br>
+                                <p class='md-title mt0 mb0' id="isUserActivatedText"></p></label><p></p><br>
                                 <div class="pull-right" >
 
-                                            <button id="deleteUserSubmit" type="submit" class="btn btn-success"
+                                    <button id="deleteUserSubmit" type="submit" class="btn btn-success"
                                             onclick="deleteUser()">Delete
                                         User<i
                                                 class="fa fa-angle-right ml5"></i></button>
-                                </div>
                                 </div>
                             </div>
                         </div>

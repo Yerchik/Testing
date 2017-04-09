@@ -14,7 +14,7 @@ public interface ResultDao {
 
     void deleteList(TypeOfTest typeOfTest);
 
-    void deleteListResult(List<Result> resultList);
+    void deleteListResultByLogin(String login);
 
     Result findById(int id);
 

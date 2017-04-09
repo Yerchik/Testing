@@ -51,7 +51,7 @@
                     <div id="errorMessage" hidden><div class='alert alert-danger' >
                         <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
                         <strong>Oh snap!</strong> Wrong login and password,<br>
-                        or your email not confirmed.
+                        or your email is not confirmed.
                     </div></div>
 
 

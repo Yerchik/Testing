@@ -34,7 +34,9 @@ public class ResultDaoImpl implements ResultDao {
     }
 
     @Transactional
-    public void deleteListResult(List<Result> resultList) {
+    public void deleteListResultByLogin(String login) {
+        List<Result> resultList = entityManager.createQuery("select r from Result r where r.account.login = :login OR r.account.email = :login")
+                .setParameter("login", login).getResultList();
         for (Result result : resultList) {
             entityManager.remove(result);
         }
@@ -48,7 +50,7 @@ public class ResultDaoImpl implements ResultDao {
 
     @Transactional
     public List<Result> findByAccount(String login) {
-        return entityManager.createQuery("select r from Result r where r.account.login = :login")
+        return entityManager.createQuery("select r from Result r where r.account.login = :login OR r.account.email = :login")
                 .setParameter("login", login).getResultList();
     }
 

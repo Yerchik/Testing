@@ -53,9 +53,7 @@
                 </a>
                 <div class="media-body">
                     <h4 class="media-heading" id="credentials"></h4>
-                    <span class="user-options"><a href="#"><i class="glyphicon glyphicon-user"></i></a>
-                              <a href="#"><i class="glyphicon glyphicon-envelope"></i></a>
-                              <a href="#"><i class="glyphicon glyphicon-cog"></i></a>
+                    <span class="user-options">
                               <a href="/logout"><i class="glyphicon glyphicon-log-out"></i></a>
 							</span>
                 </div>

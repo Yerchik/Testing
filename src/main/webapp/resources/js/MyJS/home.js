@@ -706,6 +706,18 @@ function deleteTopic() {
 
 
 $("#selektUser").on('change', function () {
+    usershow1 = false;
+    usershow2 = false;
+    usershow3 = false
+    $("#usersubjectFilterSelektor").hide(300);
+    $("#usertopicFilterSelektor").hide(300);
+    usershow4 = false;
+    $("#userdateFilterSelektor").hide(300);
+    var s2 = document.querySelector("#usersubjectFilter").options;
+    for (var i = 0; i < s2.length; i++) {
+        s2[i] = null;
+    }
+    s2[0] = null;
     if (document.getElementById('selektUser').value == '') {
         $("#usershowMyResult").hide(300);
     }
@@ -742,6 +754,11 @@ function usershowUserResult() {
     $("#usertopicFilterSelektor").hide(300);
     usershow4 = false;
     $("#userdateFilterSelektor").hide(300);
+    var s2 = document.querySelector("#usersubjectFilter").options;
+    for (var i = 0; i < s2.length; i++) {
+        s2[i] = null;
+    }
+    s2[0] = null;
     document.getElementById('userdateFilter').value = '';
     document.getElementById('usersubjectFilter').value = '';
     document.getElementById('usertopicFilter').value = '';
@@ -1048,9 +1065,11 @@ function usergetDateFiltr() {
 }
 
 $("#userdateFilter").on('change', function () {
+    $("#usermyResult").hide();
     userclearMyTable();
-    $("#tableMyResult").append(usertableHeadHTML);
+    $("#usertableMyResult").append(usertableHeadHTML);
     for (var i = 0; i < userdateResult.length; i++) {
+
         if (userdateResult[i] == document.getElementById('userdateFilter').value && usersubjectResult[i] == document.getElementById('usersubjectFilter').value &&
             usertopicResult[i] == document.getElementById('usertopicFilter').value) {
             usermakeTable(usersubjectResult[i], usertopicResult[i], userresultTest[i], userdateResult[i]);

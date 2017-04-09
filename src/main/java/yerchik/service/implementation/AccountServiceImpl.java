@@ -47,13 +47,18 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
                 roleDao.addRole(admin);
 
             } catch (Exception e) {}
-            account.setRole(roleDao.findRoleByName("ADMIN"));
+           finally {
+                account.setRole(roleDao.findRoleByName("ADMIN"));
+            }
         } else {
             try {
+                System.out.println(546);
                 Role user = new Role("USER");
                 roleDao.addRole(user);
             } catch (Exception e) {}
-            account.setRole(roleDao.findRoleByName("USER"));
+            finally {
+                account.setRole(roleDao.findRoleByName("USER"));
+            }
         }
         accountDao.add(account);
 
@@ -70,9 +75,11 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     @Override
     public void delete(String login) {
         try {
-            resultDao.deleteListResult(resultDao.findByAccount(login));
+            resultDao.deleteListResultByLogin(login);
         }catch (Exception e){}
-        accountDao.delete(login);
+        finally {
+            accountDao.delete(login);
+        }
     }
 
     @Override
