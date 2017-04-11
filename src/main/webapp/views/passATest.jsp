@@ -157,7 +157,7 @@
 <script src="/resources/js/moment.min.js"></script>
 <script src="/resources/js/fullcalendar.min.js"></script>
 <script src="/resources/js/custom.js"></script>
-<script src="/resources/js/MyJS/passATest.js"></script>
+<script src="/resources/MyJS/passATest.js"></script>
 </body>
 </html>
 

@@ -109,7 +109,7 @@
 
 <script src="/resources/js/custom.js"></script>
 
-<script src="/resources/js/MyJS/signUp.js"></script>
+<script src="/resources/MyJS/signUp.js"></script>
 
 </body>
 </html>

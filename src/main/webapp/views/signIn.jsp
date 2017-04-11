@@ -80,7 +80,7 @@
 <script src="/resources/js/jquery.cookies.js"></script>
 
 <script src="/resources/js/custom.js"></script>
-<script src="/resources/js/MyJS/SignIn.js"></script>
+<script src="/resources/MyJS/SignIn.js"></script>
 
 </body>
 </html>

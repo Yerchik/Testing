@@ -543,6 +543,6 @@
 <script src="/resources/js/moment.min.js"></script>
 <script src="/resources/js/fullcalendar.min.js"></script>
 <script src="/resources/js/custom.js"></script>
-<script src="/resources/js/MyJS/home.js"></script>
+<script src="/resources/MyJS/home.js"></script>
 </body>
 </html>

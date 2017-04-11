@@ -185,6 +185,6 @@
 <script src="/resources/js/moment.min.js"></script>
 <script src="/resources/js/fullcalendar.min.js"></script>
 <script src="/resources/js/custom.js"></script>
-<script src="/resources/js/MyJS/addQuestion.js"></script>
+<script src="/resources/MyJS/addQuestion.js"></script>
 </body>
 </html>

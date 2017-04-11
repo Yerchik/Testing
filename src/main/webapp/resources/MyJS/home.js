@@ -731,7 +731,7 @@ $("#selektUser").on('change', function () {
             contentType: 'application/json',
             success: function (response) {
                 if (response.activated) {
-                    $("#isUserActivatedText").text("Account activated");
+                    $("#isUserActivatedText").text("Account is activated");
                 }
                 else {
                     $("#isUserActivatedText").text("Account isn't activated");
